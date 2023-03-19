@@ -6,7 +6,7 @@
 
 - To start the project you need to run `docker compose up -d` it will pull the images if not exists and spin up the containers.
 
-- Run `make install` to install dependencies if this is the first time.
+- Run `make install` to install dependencies if this is the first time. :dart:
 
 ## Import data
 
@@ -29,6 +29,10 @@ Run `make test` to execute all tests
 ![Screenshot from 2023-03-19 20-31-22](https://user-images.githubusercontent.com/3720473/226199072-02ea3fbf-6a86-475c-ba2c-394743b2672a.png)
 
 Sending email **async**  you can check queue messages where each message contains serialized data which will use on the consumer side for sending emails
+
+Rabbitmq `http://localhost:15672/` 
+- username: user
+- password: password
 
 ## API
 
