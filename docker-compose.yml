@@ -11,8 +11,7 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         volumes:
-            - ./db:/var/lib/mysql
-
+            - ./var/db:/var/lib/mysql
     php:
         build:
             context: ./docker/php-fpm
@@ -36,3 +35,19 @@ services:
             - php
         volumes:
             - ./api:/var/www/symfony:cached
+    client:
+        image: node:alpine
+        command: tail -F /dev/null
+        working_dir: /usr/src/app
+        volumes:
+            - ./client:/usr/src/app
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+        volumes:
+            - ./var/rabbitmq/:/var/lib/rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"

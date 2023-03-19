@@ -1,22 +1,44 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Service;
 
+use App\DTO\FruitDTO;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Client\ClientInterface;
 
-class HttpClient {
-    public function __construct(private readonly ClientInterface $client)
+class HttpClient
+{
+    /**
+     * @param ClientInterface $client
+     */
+    public function __construct(public readonly ClientInterface $client)
     {
-        
     }
+
+    /**
+     * @return array
+     * @throws GuzzleException
+     */
     public function getAll(): array
     {
         $response = $this->client->request('GET');
 
-        return json_decode((string) $response->getBody(), true);
+        return $this->serialize(json_decode((string) $response->getBody(), true));
     }
 
-    public function getClient() :ClientInterface
+    /**
+     * @param array $data
+     * @return array
+     */
+    private function serialize(array $data): array
     {
-        return $this->client;
+        $fruitsDTO = [];
+        foreach ($data as $row) {
+            $fruitsDTO[] = FruitDTO::createFromArray($row);
+        }
+
+        return $fruitsDTO;
     }
 }

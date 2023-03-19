@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\FruitRepository;
@@ -10,13 +12,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiController extends AbstractController
 {
-    #[Route('/api/fruites')]
+    /**
+     * @param Request $request
+     * @param FruitRepository $fruitRepository
+     * @return Response
+     */
+    #[Route('/api/fruits')]
     public function getAll(Request $request, FruitRepository $fruitRepository): Response
     {
         $page = (int)$request->query->get('page', 1);
-        $offset = ($page-1) * FruitRepository::PAGINATOR_PER_PAGE;
+        $offset = ($page - 1) * FruitRepository::PAGINATOR_PER_PAGE;
         $criteria = [];
-        
+
         if ($name = $request->query->get('name')) {
             $criteria['name'] = $name;
         }
@@ -33,27 +40,19 @@ class ApiController extends AbstractController
         ]);
     }
 
-    #[Route('/api/fruites/name')]
-    public function getName(FruitRepository $fruitRepository): Response
+    /**
+     * @param string $list
+     * @param FruitRepository $fruitRepository
+     * @return Response
+     */
+    #[Route('/api/fruits/{list<name|family>}')]
+    public function getName(string $list, FruitRepository $fruitRepository): Response
     {
         $items = [];
-        foreach($fruitRepository->listOf('name') as $row){
-            $items[] = $row['name'];
+        foreach ($fruitRepository->listOf($list) as $row) {
+            $items[] = $row[$list];
         }
-        
-        return $this->json([
-            'items' => $items,
-        ]);
-    }
 
-    #[Route('/api/fruites/family')]
-    public function getFamily(FruitRepository $fruitRepository): Response
-    {
-        $items = [];
-        foreach($fruitRepository->listOf('family') as $row){
-            $items[] = $row['family'];
-        }
-        
         return $this->json([
             'items' => $items,
         ]);

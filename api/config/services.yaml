@@ -26,8 +26,11 @@ services:
         class: GuzzleHttp\Client
         arguments:
             $config:
-                base_uri: '%env(API_FRUITES)%'
+                base_uri: '%env(API_FRUITS)%'
     App\Service\HttpClient:
         class: App\Service\HttpClient
         arguments:
             $client: '@guzzle.client'
+    App\EventListener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

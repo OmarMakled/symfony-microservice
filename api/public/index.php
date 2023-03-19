@@ -1,8 +1,5 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-
 use App\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
