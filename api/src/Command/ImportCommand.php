@@ -36,7 +36,7 @@ class ImportCommand extends Command
      */
     protected function configure(): void
     {
-        $this->setDescription('Outputs "Hello World"');
+        $this->setDescription('Import fruits list and insert into DB');
     }
 
     /**
