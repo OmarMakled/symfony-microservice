@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace App\Tests\Unit\Service;
 
 use App\DTO\FruitDTO;
 use GuzzleHttp\Client;

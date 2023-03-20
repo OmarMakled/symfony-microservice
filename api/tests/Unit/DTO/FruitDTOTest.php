@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Service;
+namespace App\Tests\Unit\DTO;
 
 use App\DTO\FruitDTO;
 use PHPUnit\Framework\TestCase;
