@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ApiController extends AbstractController
 {
+    private const PAGINATOR_PER_PAGE = 10;
     /**
      * @param Request $request
      * @param FruitRepository $fruitRepository
@@ -21,7 +22,7 @@ class ApiController extends AbstractController
     public function getAll(Request $request, FruitRepository $fruitRepository): Response
     {
         $page = (int)$request->query->get('page', 1);
-        $offset = ($page - 1) * FruitRepository::PAGINATOR_PER_PAGE;
+        $offset = ($page - 1) * self::PAGINATOR_PER_PAGE;
         $criteria = [];
 
         if ($name = $request->query->get('name')) {
@@ -35,8 +36,8 @@ class ApiController extends AbstractController
         $total = $fruitRepository->count($criteria);
         return $this->json([
             'total' => $total,
-            'items' => $fruitRepository->getList($offset, $criteria),
-            'pages' => ceil($total / FruitRepository::PAGINATOR_PER_PAGE),
+            'items' => $fruitRepository->getList($criteria, $offset, self::PAGINATOR_PER_PAGE),
+            'pages' => ceil($total / self::PAGINATOR_PER_PAGE),
         ]);
     }
 
@@ -48,13 +49,8 @@ class ApiController extends AbstractController
     #[Route('/api/fruits/{list<name|family>}')]
     public function getName(string $list, FruitRepository $fruitRepository): Response
     {
-        $items = [];
-        foreach ($fruitRepository->listOf($list) as $row) {
-            $items[] = $row[$list];
-        }
-
         return $this->json([
-            'items' => $items,
+            'items' => $fruitRepository->listOf($list),
         ]);
     }
 }

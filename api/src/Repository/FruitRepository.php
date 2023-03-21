@@ -10,8 +10,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 class FruitRepository extends ServiceEntityRepository
 {
-    public const PAGINATOR_PER_PAGE = 10;
-
     /**
      * @param ManagerRegistry $registry
      */
@@ -35,11 +33,12 @@ class FruitRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $offset
      * @param array $criteria
-     * @return array|null
+     * @param int $offset
+     * @param int $limit
+     * @return array
      */
-    public function getList(int $offset, array $criteria): ?array
+    public function getList(array $criteria, int $offset, int $limit = 10): array
     {
         $qb = $this->createQueryBuilder('f')
             ->select(['f.id', 'f.name', 'f.family', 'f.arrange as order', 'f.genus', 'f.nutritions']);
@@ -54,18 +53,18 @@ class FruitRepository extends ServiceEntityRepository
                 ->setParameter('family', $criteria['family']);
         }
 
-        return $qb->setMaxResults(self::PAGINATOR_PER_PAGE)
+        return $qb->setMaxResults($limit)
             ->setFirstResult($offset)
             ->getQuery()
             ->getResult();
     }
 
-    public function listOf(string $field): ?array
+    public function listOf(string $field): array
     {
         return $this->createQueryBuilder('f')
            ->select('f.' . $field)
            ->distinct()
            ->getQuery()
-           ->getResult();
+           ->getSingleColumnResult();
     }
 }

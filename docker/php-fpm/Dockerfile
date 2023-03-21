@@ -28,7 +28,7 @@ RUN chmod +x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions amqp
 
 RUN docker-php-ext-install \
-    pdo pdo_mysql zip xsl gd intl opcache exif mbstring
+    pdo pdo_mysql zip intl opcache exif mbstring
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone \
